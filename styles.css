@@ -10,6 +10,8 @@ body {
 
 .board{
   display: grid;
+  width: 500px;
+  height: 500px;
   padding: 40px;
   grid-template-columns: repeat(3,1fr);
   grid-template-rows: repeat(3,1fr);
