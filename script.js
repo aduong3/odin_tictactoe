@@ -26,7 +26,16 @@ function Gameboard() {
     console.log(boardWithValues);
   };
 
-  return { getBoard, placeMarker, printBoard };
+  const resetBoard = () => {
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < column; j++) {
+        board[i][j].resetValue();
+      }
+    }
+    ScreenController().updateScreen();
+  };
+
+  return { getBoard, placeMarker, printBoard, resetBoard };
 }
 
 function Cell() {
@@ -37,8 +46,9 @@ function Cell() {
   };
 
   const getValue = () => value;
+  const resetValue = () => (value = "");
 
-  return { addMarker, getValue };
+  return { addMarker, getValue, resetValue };
 }
 
 function GameController(
@@ -80,29 +90,29 @@ function GameController(
         //check rows
         //winner = (board[i][0] === 'X' ? players[0].name : players[1].name);
         return true;
+      } else if (
+        board.getBoard()[0][i].getValue() != "" &&
+        board.getBoard()[0][i].getValue() ==
+          board.getBoard()[1][i].getValue() &&
+        board.getBoard()[0][i].getValue() == board.getBoard()[2][i].getValue()
+      ) {
+        //check columns
+        return true;
       }
-      //   } else if (
-      //     board[0][i] != "" &&
-      //     board[0][i] == board[1][i] &&
-      //     board[0][i] == board[2][i]
-      //   ) {
-      //     //check columns
-      //     return true;
-      //   }
-      // }
-      // //check diagonals [0][0] [1][1] [2][2], [0][2] [1][1] [2][0]
-      // if (
-      //   board[0][0] == marker &&
-      //   board[0][0] == board[1][1] &&
-      //   board[0][0] == board[2][2]
-      // ) {
-      //   return true;
-      // } else if (
-      //   board[0][2] == marker &&
-      //   board[0][2] == board[1][1] &&
-      //   board[0][2] == board[2][0]
-      // ) {
-      //   return true;
+    }
+    //check diagonals [0][0] [1][1] [2][2], [0][2] [1][1] [2][0]
+    if (
+      board.getBoard()[0][0].getValue() != "" &&
+      board.getBoard()[0][0].getValue() == board.getBoard()[1][1].getValue() &&
+      board.getBoard()[0][0].getValue() == board.getBoard()[2][2].getValue()
+    ) {
+      return true;
+    } else if (
+      board.getBoard()[0][2].getValue() != "" &&
+      board.getBoard()[0][2].getValue() == board.getBoard()[1][1].getValue() &&
+      board.getBoard()[0][2].getValue() == board.getBoard()[2][0].getValue()
+    ) {
+      return true;
     }
   };
 
@@ -123,6 +133,7 @@ function GameController(
     playRound,
     getActivePlayer,
     getBoard: board.getBoard,
+    resetBoard: board.resetBoard,
     checkWinner,
   };
 }
@@ -150,6 +161,19 @@ function ScreenController() {
         boardDiv.appendChild(cellButton);
       });
     });
+
+    if (game.checkWinner()) {
+      if(!document.querySelector('.resetButton')){
+      const resetDiv = document.querySelector(".reset");
+      const resetButton = document.createElement("button");
+      resetButton.classList.add("resetButton");
+      resetButton.textContent = "Reset Game";
+      resetButton.addEventListener("click", game.resetBoard);
+      resetDiv.appendChild(resetButton);
+      }
+    } else if (!game.checkWinner() && document.querySelector(".resetButton")) {
+      document.querySelector(".resetButton").remove();
+    }
   };
 
   function clickHandlerBoard(e) {
@@ -157,12 +181,14 @@ function ScreenController() {
       const selectedRow = e.target.dataset.row;
       const selectedColumn = e.target.dataset.column;
       game.playRound(selectedRow, selectedColumn);
-      updateScreen();
     }
+    updateScreen();
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
 
   updateScreen();
+
+  return {updateScreen};
 }
 
 ScreenController();
