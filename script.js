@@ -69,6 +69,7 @@ function GameController(
     },
   ];
   let activePlayer = players[0];
+  let gameOver = false;
 
 
   const checkStatus = () => {
@@ -117,11 +118,14 @@ function GameController(
   const isGameOver = () => {
     const status = checkStatus();
     //console.log(status);
-    if(status == 'win'){
+    if(status === 'win'){
       console.log(`${getActivePlayer().name} has won!`);
-    } else if(status == 'tie'){
+      gameOver = true;
+    } else if(status === 'tie'){
       console.log('Tie Game!');
+      gameOver = true;
     }
+    return gameOver;
   };
 
   const switchPlayerTurn = () => {
@@ -136,16 +140,20 @@ function GameController(
   };
 
   const playRound = (row, column) => {
+      if(gameOver){
+        console.log("The game is over. Please reset to play again.");
+        return;
+      }
       if(board.getBoard()[row][column].getValue() == ''){
       board.placeMarker(row, column, getActivePlayer().marker);
-      }
-      
       printNewRound();
 
       if(!isGameOver()){
         switchPlayerTurn();
       }
-    
+      } else{
+        console.log("Invalid move! Pick another cell!");
+      }
   };
 
   printNewRound();
