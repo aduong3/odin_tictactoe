@@ -28,7 +28,7 @@ function Gameboard() {
   };
 
   return { getBoard, placeMarker, printBoard };
-};
+}
 
 function Cell() {
   let value = "";
@@ -40,7 +40,7 @@ function Cell() {
   const getValue = () => value;
 
   return { setValue, getValue };
-};
+}
 
 function turnCounter() {
   let turn = 1;
@@ -48,15 +48,15 @@ function turnCounter() {
   const getTurn = () => turn;
   const increaseTurn = () => turn++;
 
-  return {getTurn, increaseTurn};
-};
+  return { getTurn, increaseTurn };
+}
 
 function GameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
-  const board = Gameboard();
-  const turnCount = turnCounter();
+  let board = Gameboard();
+  let turnCount = turnCounter();
 
   const players = [
     {
@@ -71,11 +71,9 @@ function GameController(
   let activePlayer = players[0];
   let gameOver = false;
 
-
   const checkStatus = () => {
     const checkBoard = board.getBoard();
     const marker = getActivePlayer().marker;
-
 
     let firstDiagCount = 0;
     let secondDiagCount = 0;
@@ -109,8 +107,8 @@ function GameController(
 
       if (firstDiagCount == 3 || secondDiagCount == 3) return "win";
     }
-    if(turnCount.getTurn() === 9){
-      return 'tie';
+    if (turnCount.getTurn() === 9) {
+      return "tie";
     }
     return null;
   };
@@ -118,14 +116,23 @@ function GameController(
   const isGameOver = () => {
     const status = checkStatus();
     //console.log(status);
-    if(status === 'win'){
+    if (status === "win") {
       console.log(`${getActivePlayer().name} has won!`);
       gameOver = true;
-    } else if(status === 'tie'){
-      console.log('Tie Game!');
+    } else if (status === "tie") {
+      console.log("Tie Game!");
       gameOver = true;
     }
     return gameOver;
+  };
+
+  const reset = () => {
+    board = Gameboard();
+    turnCount = turnCounter();
+    activePlayer = players[0];
+    gameOver = false;
+    console.log("Game reset!");
+    printNewRound();
   };
 
   const switchPlayerTurn = () => {
@@ -140,26 +147,27 @@ function GameController(
   };
 
   const playRound = (row, column) => {
-      if(gameOver){
-        console.log("The game is over. Please reset to play again.");
-        return;
-      }
-      if(board.getBoard()[row][column].getValue() == ''){
+    if (gameOver) {
+      console.log("The game is over. Please reset to play again.");
+      return;
+    }
+    if (board.getBoard()[row][column].getValue() == "") {
       board.placeMarker(row, column, getActivePlayer().marker);
       printNewRound();
 
-      if(!isGameOver()){
+      if (!isGameOver()) {
         switchPlayerTurn();
       }
-      } else{
-        console.log("Invalid move! Pick another cell!");
-      }
+    } else {
+      console.log("Invalid move! Pick another cell!");
+    }
   };
 
   printNewRound();
 
   return {
     playRound,
+    reset,
   };
 }
 
