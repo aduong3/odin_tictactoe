@@ -15,7 +15,9 @@ function Gameboard() {
   const placeMarker = (row, column, marker) => {
     //console.log(board[row][column].getValue());
     while (board[row][column].getValue() === "") {
+
       board[row][column].setValue(marker);
+
     }
     //console.log(board[row][column].getValue());
   };
@@ -27,7 +29,16 @@ function Gameboard() {
     console.log(boardWithValues);
   };
 
-  return { getBoard, placeMarker, printBoard };
+  const resetBoard = () => {
+    for (let i = 0; i < row; i++) {
+      for (let j = 0; j < column; j++) {
+        board[i][j].resetValue();
+      }
+    }
+    ScreenController().updateScreen();
+  };
+
+  return { getBoard, placeMarker, printBoard, resetBoard };
 }
 
 function Cell() {
@@ -38,6 +49,8 @@ function Cell() {
   };
 
   const getValue = () => value;
+  const resetValue = () => (value = "");
+
 
   return { setValue, getValue };
 }
@@ -151,7 +164,45 @@ function GameController(
     board.printBoard();
   };
 
+  const checkWinner = () => {
+    for (let i = 0; i < 3; i++) {
+      if (
+        board.getBoard()[i][0].getValue() != "" &&
+        board.getBoard()[i][0].getValue() ==
+          board.getBoard()[i][1].getValue() &&
+        board.getBoard()[i][0].getValue() == board.getBoard()[i][2].getValue()
+      ) {
+        //check rows
+        //winner = (board[i][0] === 'X' ? players[0].name : players[1].name);
+        return true;
+      } else if (
+        board.getBoard()[0][i].getValue() != "" &&
+        board.getBoard()[0][i].getValue() ==
+          board.getBoard()[1][i].getValue() &&
+        board.getBoard()[0][i].getValue() == board.getBoard()[2][i].getValue()
+      ) {
+        //check columns
+        return true;
+      }
+    }
+    //check diagonals [0][0] [1][1] [2][2], [0][2] [1][1] [2][0]
+    if (
+      board.getBoard()[0][0].getValue() != "" &&
+      board.getBoard()[0][0].getValue() == board.getBoard()[1][1].getValue() &&
+      board.getBoard()[0][0].getValue() == board.getBoard()[2][2].getValue()
+    ) {
+      return true;
+    } else if (
+      board.getBoard()[0][2].getValue() != "" &&
+      board.getBoard()[0][2].getValue() == board.getBoard()[1][1].getValue() &&
+      board.getBoard()[0][2].getValue() == board.getBoard()[2][0].getValue()
+    ) {
+      return true;
+    }
+  };
+
   const playRound = (row, column) => {
+
 
     if (gameOver) {
       console.log("The game is over. Please reset to play again.");
@@ -167,6 +218,7 @@ function GameController(
     } else {
       console.log("Invalid move! Pick another cell!");
     }
+
   };
 
   printNewRound();
@@ -185,8 +237,11 @@ function ScreenController() {
   const game = GameController();
   const playerTurnDiv = document.querySelector(".playerTurn");
   const boardDiv = document.querySelector(".board");
+
   const playerOne = document.querySelector('.playerOne');
   const playerTwo = document.querySelector('.playerTwo');
+
+
 
   const updateScreen = () => {
     boardDiv.textContent = "";
@@ -221,10 +276,12 @@ function ScreenController() {
         cellButton.classList.add("cell");
         cellButton.dataset.row = i;
         cellButton.dataset.column = j;
+
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       });
     });
+
   };
 
 
@@ -239,6 +296,7 @@ function ScreenController() {
 
   boardDiv.addEventListener("click", clickHandlerBoard);
   updateScreen();
+
 
 
 
