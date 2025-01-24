@@ -6,23 +6,72 @@
 
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.playerTurn{
+  font-size: min(3vw,3vh);
+  font-weight: bold;
 }
 
 .board{
   display: grid;
-  width: 500px;
-  height: 500px;
-  padding: 40px;
+  height: min(60vh, 60vw);
+  width: min(60vh,60vw);
   grid-template-columns: repeat(3,1fr);
   grid-template-rows: repeat(3,1fr);
-  gap: 16px;
+  justify-content: center;
+  gap: 1.5vw;
+  background-color: black;
+
 }
 
 .cell{
+  border: none;
+  font-size: min(7vh,7vw);
+  background-color: #fff;
+  cursor: pointer;
+}
+.cell:hover{
+  background-color: rgb(231, 231, 231);
+}
+
+.resetDiv{
+  height: 8vh;
+  width: 8vw;
+}
+
+.resetButton{
+  font-size: 1.5vw;
+}
+
+.playerNames{
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  font-size: min(3vw, 3vh);
+  font-weight: bold;
+}
+
+.playerNames > div:first-child{
+  display: flex;
+  gap: 12px;
+}
+
+.playerNames > div:first-child > button{
+  height: 100%;
+  width: 1.8vw;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
   cursor: pointer;
 }
 
-.reset{
-  width: 30px;
-  height: 30px;
+.playerNames > div:first-child > button:hover{
+  background-color: rgba(0, 0, 0, 0.13);
+
 }
