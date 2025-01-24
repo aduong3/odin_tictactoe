@@ -173,9 +173,11 @@ function GameController(
 
   return {
     playRound,
+    reset,
     getActivePlayer,
     getBoard: board.getBoard,
     isGameOver,
+    players,
   };
 }
 
@@ -183,12 +185,17 @@ function ScreenController() {
   const game = GameController();
   const playerTurnDiv = document.querySelector(".playerTurn");
   const boardDiv = document.querySelector(".board");
+  const playerOne = document.querySelector('.playerOne');
+  const playerTwo = document.querySelector('.playerTwo');
 
   const updateScreen = () => {
     boardDiv.textContent = "";
 
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
+
+    playerOne.textContent = `${game.players[0].name} (${game.players[0].marker})`;
+    playerTwo.textContent = `${game.players[1].name} (${game.players[1].marker})`;
 
       //console.log(game.isGameOver());
       if(document.querySelector('.resetButton')) document.querySelector('.resetButton').remove();
@@ -206,9 +213,6 @@ function ScreenController() {
     
         resetDiv.appendChild(resetButton);
     } 
-      
-    
-
       }
 
     board.forEach((row, i) => {
@@ -230,8 +234,14 @@ function ScreenController() {
     game.playRound(selectedRow, selectedColumn);
     updateScreen();
   }
+
+
+
   boardDiv.addEventListener("click", clickHandlerBoard);
   updateScreen();
+
+
+
 }
 
 ScreenController();
