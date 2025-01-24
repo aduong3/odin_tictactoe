@@ -6,4 +6,28 @@
 
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.board{
+  display: grid;
+  height: 500px;
+  width: 500px;
+  grid-template-columns: repeat(3,1fr);
+  grid-template-rows: repeat(3,1fr);
+  justify-content: center;
+  gap: 24px;
+  background-color: black;
+
+}
+
+.cell{
+  border: none;
+  font-size: 4rem;
+  background-color: #fff;
+  cursor: pointer;
 }
