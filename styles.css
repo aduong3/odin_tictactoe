@@ -8,15 +8,20 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 48px;
   justify-content: center;
   align-items: center;
 }
 
+.playerTurn{
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
 .board{
   display: grid;
-  height: 500px;
-  width: 500px;
+  height: 600px;
+  width: 600px;
   grid-template-columns: repeat(3,1fr);
   grid-template-rows: repeat(3,1fr);
   justify-content: center;
@@ -30,4 +35,9 @@ body {
   font-size: 4rem;
   background-color: #fff;
   cursor: pointer;
+}
+
+.resetButton{
+  height: 80px;
+  width: 100px;
 }

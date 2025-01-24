@@ -43,7 +43,7 @@ function Cell() {
 }
 
 function turnCounter() {
-  let turn = 1;
+  let turn = 0;
 
   const getTurn = () => turn;
   const increaseTurn = () => turn++;
@@ -115,12 +115,15 @@ function GameController(
 
   const isGameOver = () => {
     const status = checkStatus();
+    const playerTurnDiv = document.querySelector('.playerTurn');
     //console.log(status);
     if (!gameOver) {
       if (status === "win") {
+        playerTurnDiv.textContent = `${getActivePlayer().name} has won!`;
         console.log(`${getActivePlayer().name} has won!`);
         gameOver = true;
       } else if (status === "tie") {
+        playerTurnDiv.textContent = 'Tie Game!'
         console.log("Tie Game!");
         gameOver = true;
       }
@@ -149,6 +152,7 @@ function GameController(
   };
 
   const playRound = (row, column) => {
+
     if (gameOver) {
       console.log("The game is over. Please reset to play again.");
       return;
@@ -169,7 +173,6 @@ function GameController(
 
   return {
     playRound,
-    reset,
     getActivePlayer,
     getBoard: board.getBoard,
     isGameOver,
@@ -187,13 +190,26 @@ function ScreenController() {
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
 
-    if (game.isGameOver().status == "win") {
-      playerTurnDiv.textContent = `${getActivePlayer().name} has won!`;
-    } else if (game.isGameOver().status == "tie") {
-      playerTurnDiv.textContent = `Tie Game!`;
-    } else {
+      //console.log(game.isGameOver());
+      if(document.querySelector('.resetButton')) document.querySelector('.resetButton').remove();
+      if(!game.isGameOver()) {
       playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
-    }
+      } else {
+        if(!document.querySelector('.resetButton')){
+        const resetDiv = document.querySelector('.resetDiv');
+        const resetButton = document.createElement('button');
+        resetButton.textContent = 'Reset Game';
+        resetButton.classList.add('resetButton');
+        resetButton.addEventListener('click', () => {
+        ScreenController();
+      });
+    
+        resetDiv.appendChild(resetButton);
+    } 
+      
+    
+
+      }
 
     board.forEach((row, i) => {
       row.forEach((cell, j) => {
@@ -206,6 +222,7 @@ function ScreenController() {
       });
     });
   };
+
 
   function clickHandlerBoard(e) {
     const selectedRow = e.target.dataset.row;
